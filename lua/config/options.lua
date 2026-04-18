@@ -1,0 +1,53 @@
+-- lua/config/options.lua
+-- Neovim 0.12 native options and defaults
+-- Inspired by modern best practices (tduyng.com)
+
+local opt = vim.opt
+
+-- Performance & Stability
+opt.updatetime = 300          -- Faster completion and UI response
+opt.timeoutlen = 300          -- Faster key sequence response
+opt.synmaxcol = 300           -- Don't highlight long lines
+
+-- General behavior
+opt.number = true             -- Show line numbers
+opt.relativenumber = true     -- Relative line numbers
+opt.mouse = "a"               -- Enable mouse in all modes
+opt.undofile = true           -- Persistent undo
+opt.swapfile = false          -- Disable swap files
+opt.backup = false            -- Disable backup files
+opt.scrolloff = 10            -- Keep 10 lines of context when scrolling
+opt.termguicolors = true      -- True color support
+opt.laststatus = 3            -- Global statusline
+
+-- SSH-Aware Clipboard
+if not vim.env.SSH_TTY then
+  opt.clipboard = "unnamedplus" -- Use system clipboard only when local
+end
+
+-- Smart Search
+opt.ignorecase = true         -- Case-insensitive searching...
+opt.smartcase = true          -- ...unless \C or capital in search
+opt.hlsearch = false          -- Don't highlight all matches permanently
+
+-- Indentation
+opt.tabstop = 2
+opt.shiftwidth = 2
+opt.expandtab = true
+opt.smartindent = true
+
+-- Neovim 0.12 Native Features
+vim.o.autocomplete = true      -- Enable built-in completion
+vim.o.pumborder = "rounded"
+vim.o.pumheight = 10
+vim.o.selection_range = true   -- Enable native incremental selection
+
+-- Aesthetics
+opt.list = true
+opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+opt.fillchars = { fold = " ", foldopen = "", foldclose = "" }
+
+-- Use `vim.loader` (enabled by default in 0.12)
+if vim.loader then
+  vim.loader.enable()
+end
