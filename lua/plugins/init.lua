@@ -50,7 +50,6 @@ require("snacks").setup({
     sections = {
       { section = "header" },
       { section = "keys", gap = 1, padding = 1 },
-      { section = "startup" },
     },
   },
   indent = { enabled = true },
@@ -74,7 +73,7 @@ require("snacks").setup({
 vim.cmd.colorscheme("tokyonight-moon")
 
 -- 5. Setup Treesitter
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter").setup({
   ensure_installed = { "lua", "typescript", "javascript", "vue", "html", "css" },
   highlight = { enable = true },
 })

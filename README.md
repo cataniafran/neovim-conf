@@ -14,7 +14,7 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
   - Enabled via `vim.o.autocomplete = true`.
   - Provides a non-blocking, modern completion experience without `nvim-cmp`.
 - **Native Incremental Selection**: 
-  - Uses `v_an` and `v_in` (default mappings) for LSP-aware selection.
+  - Uses `v_an` and `v_in` (default mappings) for LSP-aware selection. No extra configuration required.
 - **Enhanced Defaults**: 
   - Includes default mappings for common LSP actions: `gra` (actions), `grn` (rename), `grr` (references), etc.
 
@@ -25,8 +25,8 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
   - **Explorer**: Built-in file management.
   - **Notifier**: Modern notification system.
   - **Dashboard**: Minimalist and fast startup screen.
-  - **Bigfile / Indent / Scroll / Zen**: Core UI improvements.
 - **Tokyo Night Moon**: High-contrast, easy-on-the-eyes colorscheme.
+- **Which-key**: Modern keybinding documentation.
 - **Tree-sitter**: Advanced syntax highlighting and code analysis.
 
 ## Development Stack
@@ -38,5 +38,56 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
 
 1. **Install Neovim 0.12**.
 2. **Clone this repository** into `~/.config/nvim`.
-3. **Launch Neovim**: It will automatically prompt to install missing plugins.
+3. **Launch Neovim**: It will automatically install missing plugins.
 4. **Language Servers**: Ensure `vtsls` and `@vue/language-server` are installed on your system (via npm).
+
+---
+
+## How-to: Adding New Language Capabilities
+
+To add support for a new language (e.g., Python, Go, Rust), follow these steps:
+
+### 1. Install the Language Server
+Install the required language server on your system using your preferred package manager (npm, pip, brew, etc.).
+
+### 2. Configure the Server
+Open `lua/plugins/lsp.lua` and add a configuration for the new server using `vim.lsp.config`. This is where you define settings and filetypes.
+
+```lua
+-- Example for Python (Pyright)
+vim.lsp.config("pyright", {
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        typeCheckingMode = "basic",
+      },
+    },
+  },
+  filetypes = { "python" },
+})
+```
+
+### 3. Enable the Server
+At the bottom of `lua/plugins/lsp.lua`, enable the server so Neovim knows to start it for the matching filetypes.
+
+```lua
+vim.lsp.enable("pyright")
+```
+
+### 4. Add Tree-sitter Support
+Open `lua/plugins/init.lua` and add the language to the `ensure_installed` list in the Treesitter setup.
+
+```lua
+-- lua/plugins/init.lua
+require("nvim-treesitter").setup({
+  ensure_installed = { 
+    "lua", "typescript", "javascript", "vue", "html", "css",
+    "python", -- Add your new language here
+  },
+  highlight = { enable = true },
+})
+```
+
+### 5. Restart Neovim
+Restart Neovim and run `:TSUpdate` (or it will trigger automatically if configured) to install the new Tree-sitter parser.

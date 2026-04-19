@@ -40,7 +40,6 @@ opt.smartindent = true
 vim.o.autocomplete = true      -- Enable built-in completion
 vim.o.pumborder = "rounded"
 vim.o.pumheight = 10
-vim.o.selection_range = true   -- Enable native incremental selection
 
 -- Aesthetics
 opt.list = true
