@@ -50,3 +50,9 @@ opt.fillchars = { fold = " ", foldopen = "", foldclose = "" }
 if vim.loader then
   vim.loader.enable()
 end
+
+-- Disable unused providers
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0 -- Enabled only if specifically needed
+vim.g.loaded_node_provider = 0 -- Using native binaries instead
+vim.g.loaded_python3_provider = 0 -- Using native binaries instead

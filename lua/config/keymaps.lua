@@ -59,6 +59,10 @@ map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "Force write" })
 -- Explorer (Aligned with AstroNvim <leader>e)
 map("n", "<leader>e", function() Snacks.explorer() end, { desc = "Toggle File Explorer" })
 
+-- Native Commenting
+map("n", "<leader>/", "gcc", { remap = true, desc = "Toggle comment" })
+map("v", "<leader>/", "gc", { remap = true, desc = "Toggle comment" })
+
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 

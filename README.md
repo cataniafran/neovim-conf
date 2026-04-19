@@ -48,7 +48,18 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
 To add support for a new language (e.g., Python, Go, Rust), follow these steps:
 
 ### 1. Install the Language Server
-Install the required language server on your system using your preferred package manager (npm, pip, brew, etc.).
+Install the required language server on your system using your preferred package manager.
+
+| Language | Server | Installation Command |
+| :--- | :--- | :--- |
+| **Lua** | `lua-language-server` | `brew install lua-language-server` |
+| **TypeScript** | `@vtsls/language-server` | `npm install -g @vtsls/language-server` |
+| **Vue** | `@vue/language-server` | `npm install -g @vue/language-server @vue/typescript-plugin` |
+| **C** | `clangd` | `brew install llvm` |
+| **Rust** | `rust-analyzer` | `rustup component add rust-analyzer` |
+| **Zig** | `zls` | `brew install zls` |
+| **Ruby** | `ruby-lsp` | `gem install ruby-lsp` |
+| **Go** | `gopls` | `go install golang.org/x/tools/gopls@latest` |
 
 ### 2. Configure the Server
 Open `lua/plugins/lsp.lua` and add a configuration for the new server using `vim.lsp.config`. This is where you define settings and filetypes.

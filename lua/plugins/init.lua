@@ -5,7 +5,8 @@
 local plugins = {
   "https://github.com/folke/snacks.nvim",
   "https://github.com/folke/tokyonight.nvim",
-  "https://github.com/folke/which-key.nvim", -- Added which-key
+  "https://github.com/folke/which-key.nvim",
+  "https://github.com/echasnovski/mini.icons", -- Added for icon support
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
   "https://github.com/neovim/nvim-lspconfig",
 }
@@ -13,7 +14,10 @@ local plugins = {
 -- 1. Register plugins with native pack manager
 vim.pack.add(plugins)
 
--- 2. Configure Which-key
+-- 2. Setup Icons
+require("mini.icons").setup()
+
+-- 3. Configure Which-key
 local wk = require("which-key")
 wk.setup({
   preset = "modern", -- modern 0.12 look
@@ -61,6 +65,7 @@ require("snacks").setup({
   picker = {
     enabled = true,
     layout = { preset = "telescope" },
+    ui_select = true, -- Use Snacks.picker for vim.ui.select
   },
   quickfile = { enabled = true },
   scroll = { enabled = true },
@@ -69,12 +74,20 @@ require("snacks").setup({
   zen = { enabled = true },
 })
 
+-- Set Snacks as the default UI handler for input
+vim.ui.input = function(...)
+  return require("snacks").input(...)
+end
+
 -- 4. Set Colorscheme
 vim.cmd.colorscheme("tokyonight-moon")
 
 -- 5. Setup Treesitter
 require("nvim-treesitter").setup({
-  ensure_installed = { "lua", "typescript", "javascript", "vue", "html", "css" },
+  ensure_installed = { 
+    "lua", "typescript", "javascript", "vue", "html", "css",
+    "c", "rust", "zig", "ruby", "go" 
+  },
   highlight = { enable = true },
 })
 
