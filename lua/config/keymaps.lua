@@ -63,12 +63,12 @@ map("n", "<leader>e", function() Snacks.explorer() end, { desc = "Toggle File Ex
 map("n", "<leader>/", "gcc", { remap = true, desc = "Toggle comment" })
 map("v", "<leader>/", "gc", { remap = true, desc = "Toggle comment" })
 
--- Accept completion with Tab
-map("i", "<Tab>", function()
+-- Accept completion with Enter (Enter to Commit flow)
+map("i", "<CR>", function()
   if vim.fn.pumvisible() == 1 then
     return "<C-y>"
   end
-  return "<Tab>"
+  return "<CR>"
 end, { expr = true, replace_keycodes = true, desc = "Accept completion" })
 
 -- Clear search with <esc>

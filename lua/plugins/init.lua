@@ -66,13 +66,6 @@ require("snacks").setup({
     enabled = true,
     layout = { preset = "telescope" },
     ui_select = true, -- Use Snacks.picker for vim.ui.select
-    win = {
-      input = {
-        keys = {
-          ["<Tab>"] = { "confirm", mode = { "i", "n" } },
-        },
-      },
-    },
   },
   quickfile = { enabled = true },
   scroll = { enabled = true },
