@@ -9,6 +9,20 @@ opt.updatetime = 300          -- Faster completion and UI response
 opt.timeoutlen = 300          -- Faster key sequence response
 opt.synmaxcol = 300           -- Don't highlight long lines
 
+-- Add go/bin to path
+local go_bin = vim.fn.expand("$HOME/go/bin")
+if vim.fn.isdirectory(go_bin) == 1 then
+  vim.fn.setenv("PATH", go_bin .. ":" .. vim.fn.getenv("PATH"))
+end
+
+-- Go filetype detection
+vim.filetype.add({
+  extension = {
+    gowork = "gowork",
+    gotmpl = "gotmpl",
+  },
+})
+
 -- General behavior
 opt.number = true             -- Show line numbers
 opt.relativenumber = true     -- Relative line numbers
@@ -40,6 +54,7 @@ opt.smartindent = true
 vim.o.autocomplete = true      -- Enable built-in completion
 vim.o.pumborder = "rounded"
 vim.o.pumheight = 10
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 -- Aesthetics
 opt.list = true

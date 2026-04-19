@@ -66,6 +66,13 @@ require("snacks").setup({
     enabled = true,
     layout = { preset = "telescope" },
     ui_select = true, -- Use Snacks.picker for vim.ui.select
+    win = {
+      input = {
+        keys = {
+          ["<Tab>"] = { "confirm", mode = { "i", "n" } },
+        },
+      },
+    },
   },
   quickfile = { enabled = true },
   scroll = { enabled = true },
@@ -74,10 +81,9 @@ require("snacks").setup({
   zen = { enabled = true },
 })
 
--- Set Snacks as the default UI handler for input
-vim.ui.input = function(...)
-  return require("snacks").input(...)
-end
+-- Set Snacks as the default UI handler
+vim.ui.input = require("snacks").input
+vim.ui.select = require("snacks").picker.select
 
 -- 4. Set Colorscheme
 vim.cmd.colorscheme("tokyonight-moon")

@@ -63,6 +63,14 @@ map("n", "<leader>e", function() Snacks.explorer() end, { desc = "Toggle File Ex
 map("n", "<leader>/", "gcc", { remap = true, desc = "Toggle comment" })
 map("v", "<leader>/", "gc", { remap = true, desc = "Toggle comment" })
 
+-- Accept completion with Tab
+map("i", "<Tab>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-y>"
+  end
+  return "<Tab>"
+end, { expr = true, replace_keycodes = true, desc = "Accept completion" })
+
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
