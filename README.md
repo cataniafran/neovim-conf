@@ -9,96 +9,94 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
   - Automatically handles installation and lockfile generation (`nvim-pack-lock.json`).
 - **Native LSP Management (`vim.lsp.config`)**: 
   - Server configurations are defined using the new `vim.lsp.config` API.
-  - Automatic attaching using `vim.lsp.enable`.
-- **Native Auto-completion**: 
+  - Automatic attaching using `vim.lsp.enable` with `autotrigger` support.
+- **Native Auto-completion (`vim.o.autocomplete`)**: 
   - Enabled via `vim.o.autocomplete = true`.
-  - Provides a non-blocking, modern completion experience without `nvim-cmp`.
+  - Optimized `completeopt` (menu, menuone, noselect).
+  - **AstroNvim Style Mappings**:
+    - `<CR>` (Enter): Confirm completion.
+    - `<Tab>` / `<S-Tab>`: Cycle completion items or jump through snippet placeholders.
 - **Native Incremental Selection**: 
   - Uses `v_an` and `v_in` (default mappings) for LSP-aware selection. No extra configuration required.
+- **Native Snippets**: Powered by the new `vim.snippet` API.
 - **Enhanced Defaults**: 
   - Includes default mappings for common LSP actions: `gra` (actions), `grn` (rename), `grr` (references), etc.
 
 ## Plugins Included
 
 - **[Snacks.nvim](https://github.com/folke/snacks.nvim)**: A collection of high-quality tools for:
-  - **Picker**: Ultra-fast fuzzy finder.
-  - **Explorer**: Built-in file management.
+  - **Picker**: Ultra-fast fuzzy finder (`<leader>ff`, `<leader>fw`).
+  - **Explorer**: Built-in file management (`<leader>e`).
   - **Notifier**: Modern notification system.
   - **Dashboard**: Minimalist and fast startup screen.
-- **Tokyo Night Moon**: High-contrast, easy-on-the-eyes colorscheme.
+  - **Scroll**: Smooth, snappier scrolling with `outQuint` easing.
+  - **LazyGit**: Integrated git client (`<leader>gg`).
+- **Tokyo Night Moon**: High-contrast colorscheme.
 - **Which-key**: Modern keybinding documentation.
-- **Tree-sitter**: Advanced syntax highlighting and code analysis.
+- **Mini.icons**: Consistent icon support across the UI.
+- **Tree-sitter**: Advanced syntax highlighting for 10+ languages.
 
 ## Development Stack
 
-- **Vue 3**: Configured with `volar` 2.x in hybrid mode.
-- **TypeScript**: Configured with `vtsls` for superior performance and features (inlay hints, workspace symbols).
-
-## Usage
-
-1. **Install Neovim 0.12**.
-2. **Clone this repository** into `~/.config/nvim`.
-3. **Launch Neovim**: It will automatically install missing plugins.
-4. **Language Servers**: Ensure `vtsls` and `@vue/language-server` are installed on your system (via npm).
+- **Vue 3**: Modern **Hybrid Mode** setup using `vue_ls` and `vtsls`.
+- **TypeScript**: Optimized `vtsls` server with inlay hints and Vue plugin support.
+- **Multi-Language**: Built-in support for Lua, C/C++, Rust, Zig, Ruby, and Go.
 
 ---
 
-## How-to: Adding New Language Capabilities
+## Installation Guide
 
-To add support for a new language (e.g., Python, Go, Rust), follow these steps:
+### 1. Prerequisites
+- **Neovim 0.12.0+**
+- **Git**
+- **NPM** (for many language servers)
 
-### 1. Install the Language Server
-Install the required language server on your system using your preferred package manager.
+### 2. Setup
+```bash
+git clone <repository_url> ~/.config/nvim
+nvim # Plugins will install automatically on first launch
+```
 
-| Language | Server | Installation Command |
+### 3. Required External Tools (Manual Install)
+To support all features, install the following tools on your system:
+
+#### Essential CLI Tools
+```bash
+# Core requirements for Treesitter and UI
+npm install -g tree-sitter-cli
+brew install ripgrep fd # Recommended for Snacks.picker
+brew install lazygit    # For <leader>gg
+```
+
+#### Language Servers & Plugins
+| Language | Tool / Server | Installation Command |
 | :--- | :--- | :--- |
 | **Lua** | `lua-language-server` | `brew install lua-language-server` |
 | **TypeScript** | `@vtsls/language-server` | `npm install -g @vtsls/language-server` |
-| **Vue** | `@vue/language-server` | `npm install -g @vue/language-server @vue/typescript-plugin` |
-| **C** | `clangd` | `brew install llvm` |
+| **Vue 3** | `vue-language-server` | `npm install -g @vue/language-server @vue/typescript-plugin` |
+| **C / C++** | `clangd` | `brew install llvm` |
 | **Rust** | `rust-analyzer` | `rustup component add rust-analyzer` |
 | **Zig** | `zls` | `brew install zls` |
 | **Ruby** | `ruby-lsp` | `gem install ruby-lsp` |
 | **Go** | `gopls` | `go install golang.org/x/tools/gopls@latest` |
 
-### 2. Configure the Server
-Open `lua/plugins/lsp.lua` and add a configuration for the new server using `vim.lsp.config`. This is where you define settings and filetypes.
-
-```lua
--- Example for Python (Pyright)
-vim.lsp.config("pyright", {
-  settings = {
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        typeCheckingMode = "basic",
-      },
-    },
-  },
-  filetypes = { "python" },
-})
+#### Optional Snacks.nvim Extras
+```bash
+brew install imagemagick      # For image previews
+brew install ghostscript      # For PDF previews
+npm install -g @mermaid-js/mermaid-cli # For Mermaid diagrams
 ```
 
-### 3. Enable the Server
-At the bottom of `lua/plugins/lsp.lua`, enable the server so Neovim knows to start it for the matching filetypes.
+---
 
-```lua
-vim.lsp.enable("pyright")
-```
+## How-to: Adding New Language Capabilities
 
-### 4. Add Tree-sitter Support
-Open `lua/plugins/init.lua` and add the language to the `ensure_installed` list in the Treesitter setup.
-
-```lua
--- lua/plugins/init.lua
-require("nvim-treesitter").setup({
-  ensure_installed = { 
-    "lua", "typescript", "javascript", "vue", "html", "css",
-    "python", -- Add your new language here
-  },
-  highlight = { enable = true },
-})
-```
-
-### 5. Restart Neovim
-Restart Neovim and run `:TSUpdate` (or it will trigger automatically if configured) to install the new Tree-sitter parser.
+1.  **Install the Server**: Use the table above or your system package manager.
+2.  **Configure in `lua/plugins/lsp.lua`**:
+    ```lua
+    vim.lsp.config("your_server", { filetypes = { "your_filetype" } })
+    ```
+3.  **Enable the Server**: 
+    Add `vim.lsp.enable("your_server")` at the bottom of `lua/plugins/lsp.lua`.
+4.  **Add Tree-sitter**: 
+    Add the language to the `ensure_installed` list in `lua/plugins/init.lua`.

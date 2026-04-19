@@ -68,7 +68,13 @@ require("snacks").setup({
     ui_select = true, -- Use Snacks.picker for vim.ui.select
   },
   quickfile = { enabled = true },
-  scroll = { enabled = true },
+  scroll = {
+    enabled = true,
+    animate = {
+      duration = { step = 5, total = 100 },
+      easing = "outQuint",
+    },
+  },
   statuscolumn = { enabled = true },
   words = { enabled = true },
   zen = { enabled = true },
