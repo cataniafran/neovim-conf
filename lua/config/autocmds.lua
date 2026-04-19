@@ -64,3 +64,12 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.cmd("startinsert")
   end,
 })
+
+-- Disable autocomplete in Snacks picker input
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("snacks_picker_no_autocomplete"),
+  pattern = "snacks_picker_input",
+  callback = function()
+    vim.opt_local.autocomplete = false
+  end,
+})

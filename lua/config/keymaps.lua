@@ -59,17 +59,41 @@ map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "Force write" })
 -- Explorer (Aligned with AstroNvim <leader>e)
 map("n", "<leader>e", function() Snacks.explorer() end, { desc = "Toggle File Explorer" })
 
+-- Git / LazyGit
+map("n", "<leader>gg", function() Snacks.lazygit() end, { desc = "Toggle LazyGit" })
+
 -- Native Commenting
 map("n", "<leader>/", "gcc", { remap = true, desc = "Toggle comment" })
 map("v", "<leader>/", "gc", { remap = true, desc = "Toggle comment" })
 
 -- Accept completion with Enter (Enter to Commit flow)
 map("i", "<CR>", function()
-  if vim.fn.pumvisible() == 1 then
+  if vim.fn.pumvisible() ~= 0 then
     return "<C-y>"
   end
   return "<CR>"
 end, { expr = true, replace_keycodes = true, desc = "Accept completion" })
+
+-- Super-Tab / Shift-Tab (AstroNvim Style)
+map("i", "<Tab>", function()
+  if vim.fn.pumvisible() ~= 0 then
+    return "<C-n>"
+  elseif vim.snippet.active({ direction = 1 }) then
+    return "<cmd>lua vim.snippet.jump(1)<cr>"
+  else
+    return "<Tab>"
+  end
+end, { expr = true, replace_keycodes = true, desc = "Next completion/Snippet jump" })
+
+map("i", "<S-Tab>", function()
+  if vim.fn.pumvisible() ~= 0 then
+    return "<C-p>"
+  elseif vim.snippet.active({ direction = -1 }) then
+    return "<cmd>lua vim.snippet.jump(-1)<cr>"
+  else
+    return "<S-Tab>"
+  end
+end, { expr = true, replace_keycodes = true, desc = "Prev completion/Snippet jump" })
 
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
