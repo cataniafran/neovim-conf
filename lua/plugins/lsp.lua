@@ -6,6 +6,13 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 -- Dynamically resolve global node_modules for plugins (e.g., Volar/VTSLS)
 local function get_global_node_modules()
+  -- Try pnpm first
+  local pnpm_root = vim.fn.system("pnpm root -g"):gsub("\n", "")
+  if vim.v.shell_error == 0 and pnpm_root ~= "" then
+    return pnpm_root
+  end
+
+  -- Fallback to npm
   local npm_root = vim.fn.system("npm root -g"):gsub("\n", "")
   return npm_root
 end
@@ -136,7 +143,25 @@ vim.lsp.config("gopls", {
   },
 })
 
--- 5. Automatically enable servers for current and future buffers
+-- 5. Configure Oxc tools (oxlint, oxfmt)
+-- They will only start if their specific configuration files are present in the root
+local oxc_filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "svelte", "astro" }
+
+vim.lsp.config("oxlint", {
+  cmd = { "oxlint", "--lsp" },
+  filetypes = oxc_filetypes,
+  root_markers = { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.json", "oxlint.config.ts" },
+  workspace_required = true, -- Refuses to start if a root marker isn't found
+})
+
+vim.lsp.config("oxfmt", {
+  cmd = { "oxfmt", "--lsp" },
+  filetypes = oxc_filetypes,
+  root_markers = { ".oxfmtrc.json", ".oxfmtrc.jsonc", "oxfmt.json", "oxfmt.config.ts" },
+  workspace_required = true,
+})
+
+-- 6. Automatically enable servers for current and future buffers
 vim.lsp.enable("vtsls")
 vim.lsp.enable("vue_ls")
 vim.lsp.enable("lua_ls")
@@ -145,6 +170,8 @@ vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("zls")
 vim.lsp.enable("ruby_lsp")
 vim.lsp.enable("gopls")
+vim.lsp.enable("oxlint")
+vim.lsp.enable("oxfmt")
 
 -- Enable native completion for LSP
 vim.api.nvim_create_autocmd("LspAttach", {

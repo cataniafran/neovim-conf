@@ -58,12 +58,12 @@ nvim # Plugins will install automatically on first launch
 ```
 
 ### 3. Required External Tools (Manual Install)
-To support all features, install the following tools on your system:
+To support all features, install the following tools on your system. Using **pnpm** is recommended.
 
 #### Essential CLI Tools
 ```bash
 # Core requirements for Treesitter and UI
-npm install -g tree-sitter-cli
+pnpm add -g tree-sitter-cli
 brew install ripgrep fd # Recommended for Snacks.picker
 brew install lazygit    # For <leader>gg
 ```
@@ -72,19 +72,20 @@ brew install lazygit    # For <leader>gg
 | Language | Tool / Server | Installation Command |
 | :--- | :--- | :--- |
 | **Lua** | `lua-language-server` | `brew install lua-language-server` |
-| **TypeScript** | `@vtsls/language-server` | `npm install -g @vtsls/language-server` |
-| **Vue 3** | `vue-language-server` | `npm install -g @vue/language-server @vue/typescript-plugin` |
+| **TypeScript** | `@vtsls/language-server` | `pnpm add -g @vtsls/language-server` |
+| **Vue 3** | `vue-language-server` | `pnpm add -g @vue/language-server @vue/typescript-plugin` |
 | **C / C++** | `clangd` | `brew install llvm` |
 | **Rust** | `rust-analyzer` | `rustup component add rust-analyzer` |
 | **Zig** | `zls` | `brew install zls` |
 | **Ruby** | `ruby-lsp` | `gem install ruby-lsp` |
 | **Go** | `gopls` | `go install golang.org/x/tools/gopls@latest` |
+| **Oxc** | `oxlint` / `oxfmt` | `pnpm add -g oxlint oxfmt` |
 
 #### Optional Snacks.nvim Extras
 ```bash
 brew install imagemagick      # For image previews
 brew install ghostscript      # For PDF previews
-npm install -g @mermaid-js/mermaid-cli # For Mermaid diagrams
+pnpm add -g @mermaid-js/mermaid-cli # For Mermaid diagrams
 ```
 
 ---
