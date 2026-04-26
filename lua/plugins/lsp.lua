@@ -109,6 +109,7 @@ vim.lsp.config("vtsls", {
 -- 3. Configure Vue Language Server (vue_ls)
 -- This replaces the deprecated 'volar' configuration name
 vim.lsp.config("vue_ls", {
+  cmd = { "vue-language-server", "--stdio" },
   settings = {
     vue = {
       hybridMode = true, -- Modern Volar 2.x/3.x feature
