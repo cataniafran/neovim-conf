@@ -4,20 +4,42 @@
 -- 1. Helper for common capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
--- Dynamically resolve global node_modules for plugins (e.g., Volar/VTSLS)
-local function get_global_node_modules()
-  -- Try pnpm first
-  local pnpm_root = vim.fn.system("pnpm root -g"):gsub("\n", "")
-  if vim.v.shell_error == 0 and pnpm_root ~= "" then
-    return pnpm_root
+-- Dynamically resolve @vue/typescript-plugin location for VTSLS
+local function get_vue_typescript_plugin_path()
+  -- 1. Check local project node_modules
+  local local_plugin = vim.fn.getcwd() .. "/node_modules/@vue/typescript-plugin"
+  if vim.uv.fs_stat(local_plugin) then
+    return local_plugin
   end
 
-  -- Fallback to npm
+  -- 2. Check pnpm global installation
+  local pnpm_root = vim.fn.system("pnpm root -g"):gsub("\n", "")
+  if vim.v.shell_error == 0 and pnpm_root ~= "" then
+    local matches = vim.fn.glob(pnpm_root .. "/*/node_modules/@vue/typescript-plugin", false, true)
+    if #matches > 0 and vim.uv.fs_stat(matches[1]) then
+      return matches[1]
+    end
+  end
+
+  -- 3. Check npm global installation
   local npm_root = vim.fn.system("npm root -g"):gsub("\n", "")
-  return npm_root
+  if vim.v.shell_error == 0 and npm_root ~= "" then
+    local npm_plugin = npm_root .. "/@vue/typescript-plugin"
+    if vim.uv.fs_stat(npm_plugin) then
+      return npm_plugin
+    end
+  end
+
+  -- 4. Check bun global installation
+  local bun_plugin = vim.fn.expand("~/.bun/install/global/node_modules/@vue/typescript-plugin")
+  if vim.uv.fs_stat(bun_plugin) then
+    return bun_plugin
+  end
+
+  return ""
 end
 
-local global_node_modules = get_global_node_modules()
+local vue_typescript_plugin_location = get_vue_typescript_plugin_path()
 
 vim.lsp.config('lua_ls', {
   on_init = function(client)
@@ -91,15 +113,15 @@ vim.lsp.config("vtsls", {
       },
       -- Volar 2.x Hybrid Mode Support
       tsserver = {
-        globalPlugins = {
+        globalPlugins = (vue_typescript_plugin_location ~= "") and {
           {
             name = "@vue/typescript-plugin",
-            location = global_node_modules .. "/@vue/typescript-plugin",
+            location = vue_typescript_plugin_location,
             languages = { "vue" },
             configNamespace = "typescript",
             enableForWorkspaceTypeScriptVersions = true,
           },
-        },
+        } or {},
       },
     },
   },
