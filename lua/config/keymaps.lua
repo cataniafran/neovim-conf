@@ -99,6 +99,50 @@ end, { expr = true, replace_keycodes = true, desc = "Prev completion/Snippet jum
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
+-- Native project-wide search and replace through ripgrep and quickfix
+vim.api.nvim_create_user_command("ProjectReplace", function()
+  local search = vim.fn.input("Search pattern: ")
+  if search == "" then
+    return
+  end
+
+  local replacement = vim.fn.input("Replace with: ")
+  local pattern = vim.fn.escape(search, "/")
+  local escaped_replacement = vim.fn.escape(replacement, "/\\")
+
+  local result = vim.system({
+    "rg",
+    "--vimgrep",
+    "--no-heading",
+    "--color=never",
+    "--hidden",
+    "--glob",
+    "!.git",
+    search,
+    ".",
+  }, { text = true }):wait()
+
+  if result.code > 1 then
+    vim.notify(result.stderr:gsub("%s+$", ""), vim.log.levels.ERROR)
+    return
+  end
+
+  vim.fn.setqflist({}, " ", {
+    title = "ProjectReplace: " .. search,
+    lines = vim.split(result.stdout, "\n", { trimempty = true }),
+    efm = "%f:%l:%c:%m",
+  })
+
+  if result.code == 1 then
+    vim.notify("No matches found", vim.log.levels.INFO)
+    return
+  end
+
+  vim.cmd("cfdo %s/" .. pattern .. "/" .. escaped_replacement .. "/gc | update")
+end, { desc = "Replace across project" })
+
+map("n", "<leader>sr", "<cmd>ProjectReplace<cr>", { desc = "Replace across project" })
+
 -- VSCode-style Line Movement (Kept from previous polish as they are standard in many configs)
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })

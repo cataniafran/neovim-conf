@@ -35,6 +35,7 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
 - **Which-key**: Modern keybinding documentation.
 - **Mini.icons**: Consistent icon support across the UI.
 - **Tree-sitter**: Advanced syntax highlighting for 10+ languages.
+- **Native project replacement**: `<leader>sr` runs `:ProjectReplace`, using ripgrep, Vim's quickfix list, and per-match confirmation.
 
 ## Development Stack
 
@@ -56,6 +57,12 @@ This configuration is optimized for **Neovim 0.12+**, leveraging the latest nati
 git clone <repository_url> ~/.config/nvim
 nvim # Plugins will install automatically on first launch
 ```
+
+### Search and replace
+
+Use `<leader>sr` or `:ProjectReplace` to search project files with ripgrep and replace matches.
+Ripgrep's regular expressions are used for searching; each match is confirmed before replacement.
+For a single buffer, use the native command `:%s/old/new/gc`.
 
 ### 3. Required External Tools (Manual Install)
 To support all features, install the following tools on your system. Using **pnpm** is recommended.
