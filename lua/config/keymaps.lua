@@ -143,6 +143,13 @@ end, { desc = "Replace across project" })
 
 map("n", "<leader>sr", "<cmd>ProjectReplace<cr>", { desc = "Replace across project" })
 
+-- Preserve yank register when pasting over a visual selection.
+-- Normally p/P in visual mode deletes the selection into the unnamed
+-- register first, overwriting what you just yanked. Route that deletion
+-- to the black hole register so the same yank can be pasted repeatedly.
+map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
+map("v", "P", '"_dP', { desc = "Paste without overwriting register" })
+
 -- VSCode-style Line Movement (Kept from previous polish as they are standard in many configs)
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
